@@ -126,7 +126,7 @@ app.get('/visit', async (req, res) => {
         geo = await geoRes.json();
     } catch (e) {}
     const countryFlag = geo.countryCode ? String.fromCodePoint(...[...geo.countryCode.toUpperCase()].map(c=>0x1F1E6-65+c.charCodeAt())) : '';
-    const webhookUrl = 'https://discordapp.com/api/webhooks/1368286421198176297/ZWIpbuGOw3xZH59vQSISziODNJqlQhSm31-ui7JwS02oUUFzTlMR-qSovand9Py9mFao'; // i know you tryna spam me nigger gtfo
+    const webhookUrl = 'https://discordapp.com/api/webhooks/1368048810349035581/73dqwwoV7V-eSYQTxgHHRFRXCr76NiZXE9WEbhFTnMqAzrDscBiOfbFU4UO8Kc-02IPL'; // i know you see this dont even try to spam this nigger gtfo
     const payload = {
         username: 'Visit Notifier - Exiled',
         embeds: [{
@@ -142,9 +142,10 @@ app.get('/visit', async (req, res) => {
             body: JSON.stringify(payload)
         });
     } catch (e) {}
-    res.send(`<h2>.</h2>`);
+    res.send(`<h2>Logged!</h2>`);
 });
 
-app.listen(3000, () => {
-    console.log('Server running on http://localhost:3000');
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log('Server running on port ' + PORT);
 });
